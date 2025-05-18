@@ -18,6 +18,18 @@ function App() {
         };
       });
 }
+
+function handleCancelAddProject() {
+  setProjectsState(
+    prevState => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+      };
+    });
+}
+
+
 // on récupère les champs destructuré dans projectData ici
 function handleAddProject(projectData){
   setProjectsState(prevState => {
@@ -30,6 +42,7 @@ function handleAddProject(projectData){
     // on concatene l'ancien tableau avec le nouveau projet
       return {
         ...prevState,
+        selectedProjectId: undefined,
         projects : [...prevState.projects, newProject],
       };
     }
@@ -38,14 +51,16 @@ function handleAddProject(projectData){
 
 let content;
 if(projectState.selectedProjectId === null) {
-  content = <NewProject onAdd={handleAddProject}/>;
+  content = <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject}/>;
 } else if(projectState.selectedProjectId === undefined) {
   content = <NoProjectSelected onStartAddProject={handleStartAddProject}/>;
 }
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectsSidebar onStartAddProject={handleStartAddProject}/>
+      <ProjectsSidebar 
+        onStartAddProject={handleStartAddProject}
+        projects={projectState.projects}/>
       {content}
     </main>
   );
